@@ -23,12 +23,12 @@ namespace JM.Application.Repositories.R_Common
             _logger = logger;
         }
 
-        public async Task<int> DeleteData(string TableName, int UserId, string deletedpc, string columnname,int primarykey)
+        public async Task<int> DeleteData(string TableName, int UserId, string deletedpc, string columnname,int primarykey,int companyid)
         {
             try
             {
                 string query = string.Format(@"UPDATE {0} SET isdeleted = 1, deleteby = {1},
- deleteon = NOW(), deletepc = '{2}' WHERE {3} = {4}", TableName, UserId, deletedpc, columnname, primarykey);
+ deleteon = NOW(), deletepc = '{2}' WHERE {3} = {4} and companyid={5}", TableName, UserId, deletedpc, columnname, primarykey, companyid);
                 var t= await base.ExecuteAsync(query);
                 return t;
 
@@ -41,7 +41,7 @@ namespace JM.Application.Repositories.R_Common
 
         }
 
-        public async Task<IEnumerable<CommonComboDto>> GetCommonComboData(string peram)
+        public async Task<IEnumerable<CommonComboDto>> GetCommonComboData(string peram,int companyid)
         {
             // CommonLibDataService dataService = new CommonLibDataService();
             var objPeram = peram.Split(',');
@@ -51,7 +51,7 @@ namespace JM.Application.Repositories.R_Common
             {
                 if (objPeram[3] != "")
                 {
-                    condition = $"Where {objPeram[3]}={objPeram[4]}";
+                    condition = $"Where {objPeram[3]}={objPeram[4]} and companyid={companyid}";
                 }
             }
             orderBy = " Order by " + objPeram[1];

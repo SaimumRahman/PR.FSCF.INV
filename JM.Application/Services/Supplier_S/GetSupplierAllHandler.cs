@@ -17,8 +17,20 @@ namespace JM.Application.Services.Supplier_S
 {
     public class GetSupplierAllQuery : IRequest<ResponseResult>
     {
+        public int CompanyId { get; set; }
     }
+    public class GetSupplierAllQueryValidator : AbstractValidator<GetSupplierAllQuery>
+    {
 
+        public GetSupplierAllQueryValidator()
+        {
+
+            RuleFor(x => x.CompanyId)
+            .GreaterThan(0)
+            .WithMessage("Company Id must be greater than 0.");
+
+        }
+    }
     public class GetAllSupplierHandler : IRequestHandler<GetSupplierAllQuery, ResponseResult>
     {
         private readonly IUnitOfWorkJM _unitOfWork;
@@ -33,8 +45,17 @@ namespace JM.Application.Services.Supplier_S
             ResponseResult rr = new ResponseResult();
             try
             {
+                var validator = new GetSupplierAllQueryValidator();
+                var validationResult = validator.Validate(request);
 
-                var result = await _unitOfWork.SupplierRepo.GetSupplierAll();
+                if (!validationResult.IsValid)
+                {
+                    rr.Message = "Error: " + string.Join("\n", validationResult.Errors.Select(x => x.ErrorMessage));
+                    rr.StatusCode = 1000;
+                    rr.IsSuccessStatus = false;
+                    return rr;
+                }
+                var result = await _unitOfWork.SupplierRepo.GetSupplierAll(request.CompanyId);
                 rr.Message = "Successfull";
                 rr.StatusCode = 2000;
                 rr.IsSuccessStatus = true;

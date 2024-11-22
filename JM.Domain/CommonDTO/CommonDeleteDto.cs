@@ -14,5 +14,6 @@ namespace JM.Domain.CommonDTO
         public string DeletedPC { get; set; }
         public string ColumnName { get; set; }
         public int PrimaryKey { get; set; }
+        public int Companyid { get; set; }
     }
 }

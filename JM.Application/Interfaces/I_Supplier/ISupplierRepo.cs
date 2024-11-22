@@ -11,8 +11,8 @@ namespace JM.Application.Interfaces.I_Supplier
 {
     public interface ISupplierRepo : IBaseDapperRepository, IGenericRepository<Supplier>
     {
-        Task<IEnumerable<SupplierDTO>> GetSupplierAll();
-        Task<SupplierDTO> GetSupplierById(int supplierId);
+        Task<IEnumerable<SupplierDTO>> GetSupplierAll(int companyid);
+        Task<SupplierDTO> GetSupplierById(int supplierId, int companyid);
         Task<int> UpdateSupplierById(Supplier supplier);
     }
 }

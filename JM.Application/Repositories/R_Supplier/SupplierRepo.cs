@@ -8,6 +8,7 @@ using JM.Infrastructure.Common;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace JM.Application.Repositories.R_Supplier
             _logger = logger;
 
         }
-        public async Task<IEnumerable<SupplierDTO>> GetSupplierAll()
+        public async Task<IEnumerable<SupplierDTO>> GetSupplierAll(int companyid)
         {
             try
             {
@@ -52,9 +53,9 @@ FROM
     supplier sp
 LEFT JOIN fscd_users fu ON fu.EmpId=sp.createby
 LEFT JOIN company cm ON cm.CompanyID=sp.companyid
-where sp.isdeleted IS NULL OR sp.isdeleted = 0;
+where sp.isdeleted IS NULL OR sp.isdeleted = 0 and sp.companyid=@companyid;
 ";
-                var result = await base.Query<SupplierDTO>(query);
+                var result = await base.Query<SupplierDTO>(query, new { companyid = companyid });
                 return result;
             }
             catch (Exception)
@@ -63,7 +64,7 @@ where sp.isdeleted IS NULL OR sp.isdeleted = 0;
                 throw;
             }
         }
-        public async Task<SupplierDTO> GetSupplierById(int supplierId)
+        public async Task<SupplierDTO> GetSupplierById(int supplierId,int companyid)
         {
             try
             {
@@ -92,14 +93,13 @@ FROM
     supplier sp
 LEFT JOIN fscd_users fu ON fu.EmpId=sp.createby
 LEFT JOIN company cm ON cm.CompanyID=sp.companyid
-where sp.supplierid=@supplierid and sp.isdeleted IS NULL OR sp.isdeleted = 0;
+where sp.supplierid=@supplierid and sp.isdeleted IS NULL OR sp.isdeleted = 0 and sp.companyid=@companyid;
 ";
-                var result = await base.QuerySingleOrDefaultAsync<SupplierDTO>(query,new { supplierid= supplierId });
+                var result = await base.QuerySingleOrDefaultAsync<SupplierDTO>(query,new { supplierid= supplierId, companyid = companyid });
                 return result;  
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -119,7 +119,7 @@ SET
     updateby = @updateby,
     UpdateOn = @UpdateOn,
     UpdatePc = @UpdatePc
-WHERE supplierid = @supplierid;
+WHERE supplierid = @supplierid and sp.companyid=@companyid;
 ";
                 var result = await base.ExecuteAsync(query,supplier);
                 return result;

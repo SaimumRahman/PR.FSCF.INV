@@ -35,6 +35,9 @@ namespace JM.Application.Services.Common_S
 
             RuleFor(x => x.commonDeleteDto.UserId)
                 .GreaterThan(0).WithMessage("User Id must be greater than 0");
+            
+            RuleFor(x => x.commonDeleteDto.Companyid)
+                .GreaterThan(0).WithMessage("Company Id must be greater than 0");
 
             RuleFor(x => x.commonDeleteDto.DeletedPC)
                 .NotEmpty().WithMessage("DeletedPC cannot be empty")
@@ -66,7 +69,7 @@ namespace JM.Application.Services.Common_S
                 _unitOfWork.BeginTransaction();
                 var result =  await _unitOfWork.Common.DeleteData(request.commonDeleteDto.TableName, request.commonDeleteDto.UserId
                                                                     , request.commonDeleteDto.DeletedPC
-                                                                    , request.commonDeleteDto.ColumnName, request.commonDeleteDto.PrimaryKey);
+                                                                    , request.commonDeleteDto.ColumnName, request.commonDeleteDto.PrimaryKey,request.commonDeleteDto.Companyid);
                 _unitOfWork.Commit();
                 if (result > 0)
                 {

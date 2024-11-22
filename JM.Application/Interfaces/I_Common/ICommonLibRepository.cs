@@ -9,7 +9,7 @@ namespace JM.Application.Interfaces.I_Common
 {
     public interface ICommonLibRepository
     {
-        Task<IEnumerable<CommonComboDto>> GetCommonComboData(string peram);
-        Task<int> DeleteData(string TableName, int UserId, string deletedpc, string columnname, int primarykey);
+        Task<IEnumerable<CommonComboDto>> GetCommonComboData(string peram, int companyid);
+        Task<int> DeleteData(string TableName, int UserId, string deletedpc, string columnname, int primarykey,int companyid);
     }
 }
