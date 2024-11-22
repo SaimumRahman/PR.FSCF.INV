@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using JM.Middleware.Converters;
 
 namespace JM.Application.Repositories.R_Common
 {
@@ -22,12 +23,12 @@ namespace JM.Application.Repositories.R_Common
             _logger = logger;
         }
 
-        public async Task<int> DeleteData(string TableName, string ColumnName, int PrimaryKey, int LoggedUserId)
+        public async Task<int> DeleteData(string TableName, int UserId, string deletedpc, string columnname,int primarykey)
         {
             try
             {
-
-                string query = string.Format(@"UPDATE {0} SET IS_DELETED = 1, DELETED_BY = {3}, DELETED_AT = CURRENT_TIMESTAMP WHERE {1} = {2}", TableName, ColumnName, PrimaryKey, LoggedUserId);
+                string query = string.Format(@"UPDATE {0} SET isdeleted = 1, deleteby = {1},
+ deleteon = NOW(), deletepc = '{2}' WHERE {3} = {4}", TableName, UserId, deletedpc, columnname, primarykey);
                 var t= await base.ExecuteAsync(query);
                 return t;
 

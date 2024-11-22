@@ -7,6 +7,7 @@ using JM.Middleware.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace JM.FSCD.API.Controllers.Supplier
@@ -20,31 +21,15 @@ namespace JM.FSCD.API.Controllers.Supplier
         {
             return await Mediator.Send(command);
         }
-
-        //[HttpGet("drop-down")]
-        //public async Task<IEnumerable<CommonComboDto>> GetComboBox([FromQuery] BaseQuery baseQuery)
-        //{
-        //    GetCommonComboQuery query = new GetCommonComboQuery()
-        //    {
-        //        CascadingField = "IS_DELETED",
-        //        CascadingValue = "0",
-        //        TableName = "BANKDETAILS",
-        //        TextField = "BANK_NAME",
-        //        ValueField = "BANK_ID"
-        //    };
-        //    return await Task.Run(() => Mediator.Send(query).Result.AsEnumerable());
-        //}
-        //[HttpPost("delete")]
-        //public async Task<ResponseResult> Delete([FromBody] DeleteDTO deleteDTO)
-        //{
-        //    CommonDeleteCommand query = new CommonDeleteCommand()
-        //    {
-        //        TableName = "BANKDETAILS",
-        //        ColumnName = "BANK_ID",
-        //        PrimaryKey = deleteDTO.PrimaryKey,
-        //        LoggedUserId = deleteDTO.LoggedUserId,
-        //    };
-        //    return await Task.Run(() => Mediator.Send(query).Result);
-        //}
+        [HttpGet("get-all")]
+        public async Task<ResponseResult> GetAll([FromQuery] GetSupplierAllQuery query)
+        {
+            return await Mediator.Send(query);
+        }
+        [HttpGet("get-by-id")]
+        public async Task<ResponseResult> GetById([FromQuery] GetSupplierByIdQuery query)
+        {
+            return await Mediator.Send(query);
+        }
     }
 }

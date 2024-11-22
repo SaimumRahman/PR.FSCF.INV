@@ -61,14 +61,13 @@ namespace JM.Application.Services.Supplier_S
                 }
                 if (request.supplierRTO.SupplierId>0)
                 {
-                    var dataUp = _mapper.Map<Supplier>(request);
+                    var dataUp = _mapper.Map<Supplier>(request.supplierRTO);
                     dataUp.UpdateBy=request.UpdateBy;
                     dataUp.UpdatePc=request.UpdatePc;
                     dataUp.UpdateOn=request.UpdateOn;
 
                     _unitOfWork.BeginTransaction();
-                    await _unitOfWork.SupplierRepo.UpdateSupplierById(dataUp);
-                    result = await _unitOfWork.SaveChangesAsync();
+                    result = await _unitOfWork.SupplierRepo.UpdateSupplierById(dataUp);
                     _unitOfWork.Commit();
                     if (result > 0)
                     {

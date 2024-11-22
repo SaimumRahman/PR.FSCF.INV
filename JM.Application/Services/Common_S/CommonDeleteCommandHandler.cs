@@ -10,34 +10,35 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace JM.Application.Services.Common_S
 {
     public class CommonDeleteCommand : IRequest<ResponseResult>
     {
-        public string TableName { get; set; }
-        public string ColumnName { get; set; }
-        public int PrimaryKey { get; set; }
-        public int LoggedUserId { get; set; }
+        public CommonDeleteDto commonDeleteDto { get; set; }
     }
     public class CommonDeleteCommandValidator : AbstractValidator<CommonDeleteCommand>
     {
         public CommonDeleteCommandValidator()
         {
-            RuleFor(x => x.TableName)
-                .NotEmpty().WithMessage("Customer Name cannot be empty")
-                .NotNull().WithMessage("Customer Name cannot be null"); 
-            RuleFor(x => x.ColumnName)
+            RuleFor(x => x.commonDeleteDto.TableName)
+                .NotEmpty().WithMessage("Table Name cannot be empty")
+                .NotNull().WithMessage("Table Name cannot be null");
+
+            RuleFor(x => x.commonDeleteDto.ColumnName)
                 .NotEmpty().WithMessage("Column Name cannot be empty")
                 .NotNull().WithMessage("Column Name cannot be null");
-            RuleFor(x => x.PrimaryKey)
-                .GreaterThan(0).WithMessage("Primary Key cannot be empty")
-                .NotNull().WithMessage("Primary Key cannot be empty");
-            RuleFor(x => x.LoggedUserId)
-                .GreaterThan(0).WithMessage("Logged User Id cannot be empty")
-                .NotNull().WithMessage("Logged User Id cannot be empty");
 
+            RuleFor(x => x.commonDeleteDto.PrimaryKey)
+                .GreaterThan(0).WithMessage("Primary Key must be greater than 0");
 
+            RuleFor(x => x.commonDeleteDto.UserId)
+                .GreaterThan(0).WithMessage("User Id must be greater than 0");
+
+            RuleFor(x => x.commonDeleteDto.DeletedPC)
+                .NotEmpty().WithMessage("DeletedPC cannot be empty")
+                .NotNull().WithMessage("DeletedPC cannot be null");
         }
     }
     public class CommonDeleteCommandHandler : IRequestHandler<CommonDeleteCommand, ResponseResult>
@@ -63,7 +64,9 @@ namespace JM.Application.Services.Common_S
                     return rr;
                 }
                 _unitOfWork.BeginTransaction();
-                var result =  await _unitOfWork.Common.DeleteData(request.TableName, request.ColumnName, request.PrimaryKey,request.LoggedUserId);
+                var result =  await _unitOfWork.Common.DeleteData(request.commonDeleteDto.TableName, request.commonDeleteDto.UserId
+                                                                    , request.commonDeleteDto.DeletedPC
+                                                                    , request.commonDeleteDto.ColumnName, request.commonDeleteDto.PrimaryKey);
                 _unitOfWork.Commit();
                 if (result > 0)
                 {
