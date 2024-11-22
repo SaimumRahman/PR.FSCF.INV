@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "JM.AuthServer.API": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:9000;http://localhost:9001"
+    }
+  }
+}
